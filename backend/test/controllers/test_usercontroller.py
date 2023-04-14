@@ -5,93 +5,76 @@ from src.controllers.usercontroller import UserController
 
 
 @pytest.fixture
-def mocked_dao():
-    return mock.MagicMock()
+def sut(email: str, res):
+    mockeduser = mock.MagicMock()
+    mockeduser.find.return_value = res
+    mockedsut = UserController(dao=mockeduser)
+    return mockedsut
 
 
-@pytest.fixture
-def mocked_user_controller(mocked_dao):
-    # Create a mock UserController object with the mocked DAO object
-    user_controller = UserController(dao=mocked_dao)
+# test get_user_by_email, valid email
+@pytest.mark.unit
+@pytest.mark.parametrize('email, res, expected',
+                         [
+                             ('test@test.com',
+                              [{'id': 1, 'firstName': 'John',
+                                  'lastName': 'Doe', 'email': 'test@test.com'}],
+                              {'id': 1, 'firstName': 'John', 'lastName': 'Doe', 'email': 'test@test.com'}),
+                         ]
+                         )
+def test_get_user_by_valid_email(sut, email, expected):
+    res = sut.get_user_by_email(email=email)
+    assert res == expected
 
-    # Create a mock user object with a duplicate email addresses
-    mock_users = [
-        {
-            '_id': '12345',
-            'email': 'jane.doe@gmail.com',
-            'firstName': 'Jane',
-            'lastName': 'Doe'
-        },
-        {
-            '_id': '67890',
-            'email': 'jane.doe@gmail.com',
-            'firstName': 'John',
-            'lastName': 'Doe'
-        }
-    ]
-
-    # Set the return value of the UserController get_user_by_email function to the mock user object
-    user_controller.get_user_by_email = mock.MagicMock(
-        return_value=mock_users[0])
-
-    return user_controller
+# test get_user_by_email, duplicate valid email
 
 
 @pytest.mark.unit
-def test_get_user_by_valid_email(mocked_user_controller):
-    # Call the get_user_by_email method on the mocked user controller
-    result = mocked_user_controller.get_user_by_email('jane.doe@gmail.com')
+@pytest.mark.parametrize('email, res, expected',
+                         [
+                             ('test@test.com',
+                              [{'id': 1, 'firstName': 'John', 'lastName': 'Doe', 'email': 'test@test.com'},
+                               {'id': 2, 'firstName': 'Jane',
+                                   'lastName': 'Doe', 'email': 'test@test.com'},
+                               {'id': 3, 'firstName': 'Bob', 'lastName': 'Smith', 'email': 'test@test.com'}],
+                              {'id': 1, 'firstName': 'John', 'lastName': 'Doe', 'email': 'test@test.com'}),
+                         ]
+                         )
+def test_get_user_by_duplicate_valid_email(sut, email, expected):
+    res = sut.get_user_by_email(email=email)
+    assert res == expected
 
-    # Assert that the method returned the expected user object
-    assert result == {
-        '_id': '12345',
-        'email': 'jane.doe@gmail.com',
-        'firstName': 'Jane',
-        'lastName': 'Doe'
-    }
-
-
-@pytest.mark.unit
-def test_get_user_by_email_duplicate(mocked_user_controller):
-    # Call the get_user_by_email method on the mocked user controller
-    result = mocked_user_controller.get_user_by_email('jane.doe@gmail.com')
-
-    # Assert that the method returned the expected user object
-    assert result == {
-        '_id': '12345',
-        'email': 'jane.doe@gmail.com',
-        'firstName': 'Jane',
-        'lastName': 'Doe'
-    }
+# test get_user_by_email, not existing email
 
 
 @pytest.mark.unit
-def test_get_user_by_not_existing_email(mocked_user_controller):
-    # Call the get_user_by_email method on the mocked user controller
-    result = mocked_user_controller.get_user_by_email('joe.doe@gmail.com')
+@pytest.mark.parametrize('email, res, expected',
+                         [
+                             ('test4@test.com', [], None)
+                         ]
+                         )
+def test_get_user_by_not_existing_email(sut, email, expected):
+    res = sut.get_user_by_email(email=email)
+    assert res == expected
 
-    # Assert that the method returned the expected user object
-    assert result == {}
 
-
+# test get_user_by_email, unvalid email
 @pytest.mark.unit
-@pytest.mark.parametrize("email", [
-    "Hej",
-    "example.com",
-    "user@",
-    "@example.com"
-])
-def test_get_user_by_invalid_email(mocked_user_controller, email):
-    # Call the get_user_by_email method on the mocked user controller with invalid email addresses
+@pytest.mark.parametrize('email, res, expected',
+                         [('test_unvalid', ['test@test.com'], 'test@test.com'),
+                          ('', ['test@test.com'], 'test@test.com')])
+def test_get_user_by_unvalid_email(sut, email, expected):
     with pytest.raises(ValueError):
-        result = mocked_user_controller.get_user_by_email(email)
+        res = sut.get_user_by_email(email=email)
+        assert res == expected
+
+# test get_user_by_email, Exception
 
 
 @pytest.mark.unit
-def test_get_user_by_email_exception(mocked_user_controller):
-    # Set the get_user_by_email method of the mocked user controller to raise an exception
-    mocked_user_controller.get_user_by_email.side_effect = Exception()
-
-    # Call the get_user_by_email method on the mocked user controller
+@pytest.mark.parametrize('email, res, expected',
+                         [('test@test.com', Exception, 'test@test.com')])
+def test_get_user_by_email_exception(sut, email, expected):
     with pytest.raises(Exception):
-        result = mocked_user_controller.get_user_by_email('jane.doe@gmail.com')
+        res = sut.get_user_by_email(email=email)
+        assert res == expected
