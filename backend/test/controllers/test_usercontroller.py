@@ -27,6 +27,12 @@ def mocked_user_controller(mocked_dao):
             'email': 'jane.doe@gmail.com',
             'firstName': 'John',
             'lastName': 'Doe'
+        },
+        {
+            '_id': '43',
+            'email': 'john.doe@gmail.com',
+            'firstName': 'John',
+            'lastName': 'Doe'
         }
     ]
 
