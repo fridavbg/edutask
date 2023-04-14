@@ -61,7 +61,7 @@ def test_get_user_by_not_existing_email(sut, email, expected):
 # test get_user_by_email, unvalid email
 @pytest.mark.unit
 @pytest.mark.parametrize('email, res, expected',
-                         [('test_unvalid', ['test@test.com'], 'test@test.com'),
+                         [('test_invalid', ['test@test.com'], 'test@test.com'),
                           ('', ['test@test.com'], 'test@test.com')])
 def test_get_user_by_unvalid_email(sut, email, expected):
     with pytest.raises(ValueError):
@@ -69,8 +69,6 @@ def test_get_user_by_unvalid_email(sut, email, expected):
         assert res == expected
 
 # test get_user_by_email, Exception
-
-
 @pytest.mark.unit
 @pytest.mark.parametrize('email, res, expected',
                          [('test@test.com', Exception, 'test@test.com')])
