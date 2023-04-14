@@ -20,12 +20,6 @@ def sut(email: str, res):
                               [{'id': 1, 'firstName': 'John',
                                   'lastName': 'Doe', 'email': 'test@test.com'}],
                               {'id': 1, 'firstName': 'John', 'lastName': 'Doe', 'email': 'test@test.com'}),
-                             ('test@test.com',
-                              [{'id': 1, 'firstName': 'John', 'lastName': 'Doe', 'email': 'test@test.com'},
-                               {'id': 2, 'firstName': 'Jane',
-                                   'lastName': 'Doe', 'email': 'test@test.com'},
-                               {'id': 3, 'firstName': 'Bob', 'lastName': 'Smith', 'email': 'test@test.com'}],
-                              {'id': 1, 'firstName': 'John', 'lastName': 'Doe', 'email': 'test@test.com'}),
                          ]
                          )
 def test_get_user_by_valid_email(sut, email, expected):
@@ -33,6 +27,8 @@ def test_get_user_by_valid_email(sut, email, expected):
     assert res == expected
 
 # test get_user_by_email, duplicate valid email
+
+
 @pytest.mark.unit
 @pytest.mark.parametrize('email, res, expected',
                          [
