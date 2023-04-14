@@ -3,7 +3,6 @@ import unittest.mock as mock
 
 from src.controllers.usercontroller import UserController
 
-
 @pytest.fixture
 def sut(email: str, res):
     mockeduser = mock.MagicMock()
@@ -27,8 +26,6 @@ def test_get_user_by_valid_email(sut, email, expected):
     assert res == expected
 
 # test get_user_by_email, duplicate valid email
-
-
 @pytest.mark.unit
 @pytest.mark.parametrize('email, res, expected',
                          [
@@ -61,7 +58,7 @@ def test_get_user_by_not_existing_email(sut, email, expected):
 # test get_user_by_email, unvalid email
 @pytest.mark.unit
 @pytest.mark.parametrize('email, res, expected',
-                         [('test_unvalid', ['test@test.com'], 'test@test.com'),
+                         [('test_invalid', ['test@test.com'], 'test@test.com'),
                           ('', ['test@test.com'], 'test@test.com')])
 def test_get_user_by_unvalid_email(sut, email, expected):
     with pytest.raises(ValueError):
@@ -69,7 +66,6 @@ def test_get_user_by_unvalid_email(sut, email, expected):
         assert res == expected
 
 # test get_user_by_email, Exception
-
 
 @pytest.mark.unit
 @pytest.mark.parametrize('email, res, expected',
