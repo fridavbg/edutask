@@ -12,7 +12,7 @@ def sut(email: str, res):
     return mockedsut
 
 
-obj = {'id': 1, 'firstName': 'John',
+user_object = {'id': 1, 'firstName': 'John',
        'lastName': 'Doe', 'email': 'test@test.com'}
 
 # test get_user_by_email, valid email
@@ -22,8 +22,8 @@ obj = {'id': 1, 'firstName': 'John',
 @pytest.mark.unit
 @pytest.mark.parametrize('email, res, expected',
                          [
-                             ('test@test.com', [obj], obj),
-                             ('test@test.com', [obj, obj, obj], obj),
+                             ('test@test.com', [user_object], user_object),
+                             ('test@test.com', [user_object, user_object, user_object], user_object),
                              ('test@test.com', [], None)
                          ]
                          )
@@ -36,7 +36,7 @@ def test_get_user_by_valid_email(sut, email, expected):
 # ValueError expected
 @pytest.mark.unit
 @pytest.mark.parametrize('email, res, expected',
-                         [('test_unvalid', ['test@test.com'], 'test@test.com')])
+                         [('test_unvalid', [user_object], user_object)])
 def test_get_user_by_unvalid_email(sut, email, expected):
     with pytest.raises(ValueError):
         res = sut.get_user_by_email(email=email)
@@ -47,7 +47,7 @@ def test_get_user_by_unvalid_email(sut, email, expected):
 # Exception expected
 @pytest.mark.unit
 @pytest.mark.parametrize('email, res, expected',
-                         [('test@test.com', Exception, 'test@test.com')])
+                         [('test@test.com', Exception, user_object)])
 def test_get_user_by_email_exception(sut, email, expected):
     with pytest.raises(Exception):
         res = sut.get_user_by_email(email=email)
