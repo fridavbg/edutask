@@ -32,11 +32,11 @@ def test_get_user_by_valid_email(sut, email, expected):
     assert res == expected
 
 
-# test get_user_by_email, unvalid email
+# test get_user_by_email, invalid email
 # ValueError expected
 @pytest.mark.unit
 @pytest.mark.parametrize('email, res, expected',
-                         [('test_unvalid', [user_object], user_object)])
+                         [('test_invalid', [user_object], user_object)])
 def test_get_user_by_unvalid_email(sut, email, expected):
     with pytest.raises(ValueError):
         res = sut.get_user_by_email(email=email)
