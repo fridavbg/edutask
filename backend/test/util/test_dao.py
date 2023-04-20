@@ -10,7 +10,7 @@ from src.util.dao import DAO
 valid_data = {"firstName": "john", "lastName": "doe",
               "email": "test@test.com", "bool": True}
 
-missing_data = {"firstName": "john", "lastName": 378,
+missing_data = {"firstName": "john", "lastName": "doe",
                 "email": "test@test.com"}
 
 invalid_data = {"firstName": "john", "lastName": 378,
