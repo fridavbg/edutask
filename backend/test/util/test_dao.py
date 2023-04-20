@@ -43,8 +43,7 @@ class TestDatabase:
         yield DAO(collection_name="test")
 
         os.remove(fabricatedFileName)
-
-        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        myclient = pymongo.MongoClient("mongodb://root:root@mongodb:27017")
         mydb = myclient["edutask"]
         mycollection = mydb["test"]
         mycollection.drop()
@@ -52,7 +51,7 @@ class TestDatabase:
     @pytest.mark.staging
     def test_create_valid_data(self, sut):
         user = sut.create({"name": "john", "lastname": "doe",
-                             "email": "test@test.com", "bool": True})
+                           "email": "test@test.com", "bool": True})
         assert type(user) == dict
         assert user["name"] == "john"
 
@@ -66,7 +65,7 @@ class TestDatabase:
 
     def test_create_none_unique(self, sut):
         sut.create({"name": "test", "lastname": "doe",
-                   "email": "test@test.com", "bool": True})
+                    "email": "test@test.com", "bool": True})
         with pytest.raises(WriteError):
             sut.create({"name": "john", "lastname": "doe",
-                       "email": "test@test.com", "bool": True})
+                        "email": "test@test.com", "bool": True})
