@@ -44,7 +44,7 @@ class TestDatabase:
                     },
                     "bool": {
                         "bsonType": "bool",
-                        "description": "if user is active"
+                        "description": "true or false"
                     }
                 }
             }
