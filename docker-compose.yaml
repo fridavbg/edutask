@@ -23,7 +23,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./backend/test:/app/test
+      - ./backend:/app
 
   frontend:
     build: ./frontend
