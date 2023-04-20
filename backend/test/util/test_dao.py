@@ -71,6 +71,7 @@ class TestDatabase:
         assert type(return_data) == dict
         assert return_data["firstName"] == "john"
 
+    @pytest.mark.staging
     @pytest.mark.parametrize("data", [
         (missing_data)
     ])
@@ -82,6 +83,7 @@ class TestDatabase:
         with pytest.raises(WriteError):
             sut.create(data)
 
+    @pytest.mark.staging
     @pytest.mark.parametrize("data", [
         (invalid_data)
     ])
@@ -93,6 +95,7 @@ class TestDatabase:
         with pytest.raises(WriteError):
             sut.create(data)
 
+    @pytest.mark.staging
     def test_create_none_unique(self, sut):
         """
         Test case 4
