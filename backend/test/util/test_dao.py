@@ -10,11 +10,11 @@ from src.util.dao import DAO
 valid_data = {"firstName": "john", "lastName": "doe",
               "email": "test@test.com", "bool": True}
 
-invalid_data = {"firstName": "john", "lastName": 378,
-                "email": "test@test.com", "bool": True}
-
 missing_data = {"firstName": "john", "lastName": 378,
                 "email": "test@test.com"}
+
+invalid_data = {"firstName": "john", "lastName": 378,
+                "email": "test@test.com", "bool": True}
 
 duplicate_email = {"firstName": "jane", "lastName": "doe",
                    "email": "test@test.com", "bool": True}
@@ -63,26 +63,41 @@ class TestDatabase:
 
     @pytest.mark.staging
     def test_create_valid_data(self, sut):
-
+        """
+        Test case 1
+        Test to create a new object and return it together with _id
+        """
         return_data = sut.create(valid_data)
         assert type(return_data) == dict
         assert return_data["firstName"] == "john"
 
     @pytest.mark.parametrize("data", [
-        (invalid_data)
+        (missing_data)
     ])
-    def test_create_invalid_data(self, sut, data):
+    def test_create_missing_properties(self, sut, data):
+        """
+        Test case 2
+        Test to create an object with missing bson properties and see if a WriteError raises
+        """
         with pytest.raises(WriteError):
             sut.create(data)
 
     @pytest.mark.parametrize("data", [
-        (missing_data)
+        (invalid_data)
     ])
-    def test_create_missing_properties(self, sut, data):
+    def test_create_invalid_data(self, sut, data):
+        """
+        Test case 3
+        Test to create an object with incorrect property data types and see if a WriteError raises
+        """
         with pytest.raises(WriteError):
             sut.create(data)
 
     def test_create_none_unique(self, sut):
+        """
+        Test case 4
+        Test to create a duplicate object with non-unique values for properties flagged as 'uniqueItems' and see if a WriteError raises
+        """
         sut.create(valid_data)
         with pytest.raises(WriteError):
             sut.create(duplicate_email)
