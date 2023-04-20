@@ -5,6 +5,7 @@ import os
 import pymongo
 from pymongo.errors import WriteError
 from src.util.dao import DAO
+from dotenv import dotenv_values
 
 
 valid_data = {"firstName": "john", "lastName": "doe",
@@ -56,7 +57,9 @@ class TestDatabase:
 
         os.remove(fabricatedFileName)
 
-        myclient = pymongo.MongoClient("mongodb://root:root@mongodb:27017")
+        MONGO_CONTAINER = dotenv_values('.env').get('MONGO_CONTAINER')
+
+        myclient = pymongo.MongoClient(MONGO_CONTAINER)
         mydb = myclient["edutask"]
         mycollection = mydb["test"]
         mycollection.drop()
