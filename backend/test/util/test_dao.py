@@ -17,13 +17,13 @@ class TestDatabase:
                 "bsonType": "object",
                 "required": ["firstName", "lastName", "email", "bool"],
                 "properties": {
-                    "name": {
+                    "firstName": {
                             "bsonType": "string",
                             "description": "users firstnamne"
                     },
-                    "lastname": {
+                    "lastName": {
                         "bsonType": "string",
-                        "description": "users lastname"
+                        "description": "users lastName"
                     },
                     "email": {
                         "bsonType": "string",
@@ -51,22 +51,23 @@ class TestDatabase:
 
     @pytest.mark.staging
     def test_create_valid_data(self, sut):
-        user = sut.create({"name": "john", "lastname": "doe",
-                             "email": "test@test.com", "bool": True})
+        user = sut.create({"firstName": "john", "lastName": "doe",
+                           "email": "test@test.com", "bool": True})
         assert type(user) == dict
         assert user["name"] == "john"
 
     @pytest.mark.parametrize("data", [
-        ({"name": "john", "lastname": 378, "email": "test@test.com", "bool": True}),
-        ({"name": "john", "email": "test@test.com"})
+        ({"firstName": "john", "lastName": 378,
+         "email": "test@test.com", "bool": True}),
+        ({"firstName": "john", "email": "test@test.com"})
     ])
     def test_create_missing_properties(self, sut, data):
         with pytest.raises(WriteError):
             sut.create(data)
 
     def test_create_none_unique(self, sut):
-        sut.create({"name": "test", "lastname": "doe",
+        sut.create({"firstName": "test", "lastName": "doe",
                    "email": "test@test.com", "bool": True})
         with pytest.raises(WriteError):
-            sut.create({"name": "john", "lastname": "doe",
+            sut.create({"firstName": "john", "lastName": "doe",
                        "email": "test@test.com", "bool": True})
