@@ -3,7 +3,6 @@ import unittest.mock as mock
 import json
 import os
 import pymongo
-from unittest.mock import patch, MagicMock
 from pymongo.errors import WriteError
 from src.util.dao import DAO
 
@@ -71,3 +70,10 @@ class TestDatabase:
         with pytest.raises(WriteError):
             sut.create({"firstName": "john", "lastName": "doe",
                        "email": "test@test.com", "bool": True})
+
+    def test_create_invalid_unique(self, sut):
+        sut.create({"firstName": "test", "lastName": "doe",
+                   "email": "test@test.com", "bool": True})
+        with pytest.raises(WriteError):
+            sut.create({"firstName": "john", "lastName": "doe",
+                       "email": "test@test.com", "bool": False})
