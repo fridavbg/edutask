@@ -16,35 +16,26 @@ describe('Adding a task to a video', () => {
   //
   // Test case #1: Create a new todo item when user presses "Add" and description is not empty
   it('Test to create a new todo item', () => {
-    cy.get('.todo-item').then(($len) => {
-      // Check that input form is clear before entering description 
-      cy.get('form input[type=text]').should('have.value', '');
-      cy.get('input[placeholder="Add a new todo item"]').type(text, { force: true })
-      cy.get('.inline-form').submit()
-      cy.get('.todo-item:last').should('contain.text', text).then(() => {
-        cy.get('.todo-item').then(($addedTask) => {
-          // Check that task list is 1 value bigger than original task list
-          expect($addedTask).to.have.length($len.length + 1)
-        })
-      })
-    })
+    cy.get('.todo-item').its('length').then((len) => {
+      cy.get('input[placeholder="Add a new todo item"]').type(text, { force: true });
+      cy.get('.inline-form').submit();
+      cy.get('.todo-item:last').should('contain.text', text);
+      // Check how many todo items there are after adding a new one
+      cy.get('.todo-item').its('length').should('eq', len + 1);
+    });
   })
 
   // Test case #2: The “Add” button remains disabled when description is empty so list length doesn't increase when pressing the button
-  it('Test to press add button when description is empty', () => {
-    cy.get('.todo-item').then(($len) => {
-      cy.get('input[placeholder="Add a new todo item"]').clear({ force: true })
-      // Check that input form is clear
-      cy.get('form input[type=text]').should('have.value', '');
-      cy.get('.inline-form').submit()
-      cy.get('.todo-item:last').should('contain.text', '').then(() => {
-        cy.get('.todo-item').then(($addedTask) => {
-          // Check that task list is is the same length as before pressing the Add button
-          expect($addedTask).to.have.length($len.length)
-        })
-      })
-    })
-  })
+  it('Test to press Add button when description is empty', () => {
+    cy.get('.todo-item').its('length').then((len) => {
+      cy.get('input[placeholder="Add a new todo item"]').clear({ force: true });
+      cy.get('.inline-form').submit();
+
+      // Check that no new todo item is added
+      cy.get('.todo-item:last').should('contain.text', '');
+      cy.get('.todo-item').its('length').should('eq', len);
+    });
+  });
 
   // Test cases for R8UC2
   //
@@ -70,9 +61,9 @@ describe('Adding a task to a video', () => {
   //
   // Test case #1: The todo task should be removed
   it('Test to remove the todo item', () => {
-    cy.get('.todo-item').its('length').then((initialLength) => {
+    cy.get('.todo-item').its('length').then((len) => {
       cy.get('.remover:first').click();
-      cy.get('.todo-item').its('length').should('eq', initialLength - 1);
+      cy.get('.todo-item').its('length').should('eq', len - 1);
     });
   })
 
