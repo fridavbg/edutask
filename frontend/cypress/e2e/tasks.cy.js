@@ -66,6 +66,16 @@ describe('Adding a task to a video', () => {
     })
   })
 
+  // Test cases for R8UC3
+  //
+  // Test case #1: The todo task should be removed
+  it('Test to remove the todo item', () => {
+    cy.get('.todo-item').its('length').then((initialLength) => {
+      cy.get('.remover:first').click();
+      cy.get('.todo-item').its('length').should('eq', initialLength - 1);
+    });
+  })
+
 
   after(function () {
     cy.request('GET', `http://localhost:5000/users/bymail/${email}`).then((user) => {
