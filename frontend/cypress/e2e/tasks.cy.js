@@ -17,6 +17,7 @@ describe('Adding a task to a video', () => {
   // Test case #1: Create a new todo item when user presses "Add" and description is not empty
   it('Test to create a new todo item', () => {
     cy.get('.todo-item').then(($len) => {
+      // Check that input form is clear before entering description 
       cy.get('form input[type=text]').should('have.value', '');
       cy.get('input[placeholder="Add a new todo item"]').type(text, { force: true })
       cy.get('.inline-form').submit()
@@ -33,6 +34,7 @@ describe('Adding a task to a video', () => {
   it('Test to press add button when description is empty', () => {
     cy.get('.todo-item').then(($len) => {
       cy.get('input[placeholder="Add a new todo item"]').clear({ force: true })
+      // Check that input form is clear
       cy.get('form input[type=text]').should('have.value', '');
       cy.get('.inline-form').submit()
       cy.get('.todo-item:last').should('contain.text', '').then(() => {
