@@ -46,6 +46,27 @@ describe('Adding a task to a video', () => {
     })
   })
 
+  // Test cases for R8UC2
+  //
+  // Test case #1: The active todo item is set to done
+  it('Test to toggle the active todo item to done', () => {
+    cy.get('.checker:first').click().then(() => {
+      cy.get('ul').find('.todo-item:first').find('.checker').click({ force: true })
+      cy.get('.todo-item:first .editable').should('have.css', 'text-decoration-line').and('eq', 'line-through');
+    })
+  })
+
+
+  // Test case #2: The done todo item is set to active
+  it('Test to toggle the done todo item to active', () => {
+    cy.get('.checker:first').click().then(() => {
+      cy.get('ul').find('.todo-item:first').find('.checker').click({ force: true })
+      cy.get('ul').find('.todo-item:first').find('.checker').click({ force: true })
+      cy.get('.todo-item:first .editable').should('not.have.css', 'text-decoration-line', 'line-through');
+    })
+  })
+
+
   after(function () {
     cy.request('GET', `http://localhost:5000/users/bymail/${email}`).then((user) => {
       cy.request('DELETE', `http://localhost:5000/users/${user.body._id.$oid}`)
