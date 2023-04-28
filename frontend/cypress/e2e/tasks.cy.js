@@ -1,4 +1,4 @@
-describe('Adding a task to a video', () => {
+describe('Test cases for requirement 8 of the EduTask specification', () => {
 
   let email = 'jane.doe@gmail.com'
   let text = 'Testing adding task'
