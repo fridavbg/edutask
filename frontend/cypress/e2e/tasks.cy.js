@@ -14,8 +14,8 @@ describe('Adding a task to a video', () => {
 
   // Test cases for R8UC1
   //
-  // Test case 1: Create a new todo item when user presses "Add" and description is not empty
-  it('Create a new todo item', () => {
+  // Test case #1: Create a new todo item when user presses "Add" and description is not empty
+  it('Test to create a new todo item', () => {
     cy.get('.todo-item').then(($len) => {
       cy.get('form input[type=text]').should('have.value', '');
       cy.get('input[placeholder="Add a new todo item"]').type(text, { force: true })
@@ -29,7 +29,20 @@ describe('Adding a task to a video', () => {
     })
   })
 
-  // Test case 2: The “Add” button remains disabled when description is empty
+  // Test case #2: The “Add” button remains disabled when description is empty so list length doesn't increase when pressing the button
+  it('Test to press add button when description is empty', () => {
+    cy.get('.todo-item').then(($len) => {
+      cy.get('input[placeholder="Add a new todo item"]').clear({ force: true })
+      cy.get('form input[type=text]').should('have.value', '');
+      cy.get('.inline-form').submit()
+      cy.get('.todo-item:last').should('contain.text', '').then(() => {
+        cy.get('.todo-item').then(($addedTask) => {
+          // Check that task list is is the same length as before pressing the Add button
+          expect($addedTask).to.have.length($len.length)
+        })
+      })
+    })
+  })
 
   after(function () {
     cy.request('GET', `http://localhost:5000/users/bymail/${email}`).then((user) => {
