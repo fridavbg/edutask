@@ -131,11 +131,11 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
     // Test cases for R8UC3
     //
     // Test case #1: The todo task should be removed
-    it("Test to remove the todo item", () => {
+    it("Test to remove a todo item", () => {
         cy.get(".todo-item")
             .its("length")
             .then((len) => {
-                cy.get(".remover:first").click();
+                cy.get(".remover:first").click({ force: true });
                 cy.get(".todo-item")
                     .its("length")
                     .should("eq", len - 1);
@@ -143,11 +143,15 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
     });
 
     after(function () {
-        cy.request({
-            method: "DELETE",
-            url: `http://localhost:5000/users/${userId}`,
-        }).then((response) => {
-            cy.log(response.body);
-        });
+        cy.request("GET", `http://localhost:5000/users/bymail/${email}`)
+            .then((user) => {
+                cy.request(
+                    "DELETE",
+                    `http://localhost:5000/users/${user.body._id.$oid}`
+                );
+            })
+            .then((response) => {
+                cy.log(response.body);
+            });
     });
 });
