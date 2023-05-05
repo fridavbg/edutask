@@ -40,8 +40,9 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
     it("should create a todo", () => {
         cy.get("div.popup")
             .find("input[type=text]")
-            // check that the input field is writeable
+            // check that the input field is writeable and cleared
             .should("be.enabled")
+            .clear()
             .type(todo, { force: true });
         cy.get("div.popup").find("input[type=submit]").click({ force: true });
 
