@@ -2,8 +2,6 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
     let email, userId;
     let todo = "new todo";
 
-    // Fixtures instead of populate endpoint
-
     before("create a dummy user", () => {
         cy.fixture("user.json").then((user) => {
             cy.request({
@@ -42,7 +40,6 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
             .find("input[type=text]")
             // check that the input field is writeable and cleared
             .should("be.enabled")
-            .clear()
             .type(todo, { force: true });
         cy.get("div.popup").find("input[type=submit]").click({ force: true });
 
