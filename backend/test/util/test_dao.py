@@ -1,5 +1,4 @@
 import pytest
-import unittest.mock as mock
 import json
 import os
 import pymongo

@@ -23,9 +23,11 @@ def create():
         for key in ['title', 'description', 'start', 'due', 'userid', 'url']:
             if key in data and isinstance(data[key], list):
                 data[key] = data[key][0]
-
+        
         taskid = controller.create(data)
         tasks = controller.get_tasks_of_user(userid)
+        print("DATA")
+        print(tasks)
         return jsonify(tasks), 200
     except WriteError as e:
         abort(400, 'Invalid input data')

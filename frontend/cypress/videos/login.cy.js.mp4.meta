@@ -1,0 +1,11 @@
+;FFMETADATA1
+[CHAPTER]
+TIMEBASE=1/1000
+START=4833
+END=10775
+title=loggin into the server starting out on the landing screen
+[CHAPTER]
+TIMEBASE=1/1000
+START=0
+END=null
+title=loggin into the server email field enabled
