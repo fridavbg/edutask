@@ -35,24 +35,6 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
         cy.get("a img:first").click();
     });
 
-    it("should create a todo", () => {
-        cy.get("div.popup")
-            .find("input[type=text]")
-            // check that the input field is writeable and cleared
-            .should("be.enabled")
-            .type(todo, { force: true });
-        cy.get("div.popup").find("input[type=submit]").click({ force: true });
-
-        cy.contains("li", `${todo}`).should("exist");
-
-        // Check if the new todo item has the same text as the todo variable
-        cy.get(".todo-item:last").should("contain.text", todo);
-    });
-
-    it("should contain a disabled Add button", () => {
-        cy.get("div.popup").find("input[type=submit]").should("be.disabled");
-    });
-
     // Test cases for R8UC1
     //
     // Test case #1: Create a new todo item when user presses "Add" and description is not empty
@@ -90,13 +72,13 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
 
     // Test cases for R8UC2
     //
-    // Test case #1: The active todo item is set to done
+    // Test case #1: The active todo item is set to done and struck through
     it("Test to toggle the active todo item to done", () => {
         cy.get(".checker:first")
             .click()
             .then(() => {
                 cy.get("ul")
-                    .find(".todo-item:first")
+                    .find(".todo-item:first")   
                     .find(".checker")
                     .click({ force: true });
                 cy.get(".todo-item:first .editable")
@@ -134,6 +116,7 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
             .its("length")
             .then((len) => {
                 cy.get(".remover:first").click({ force: true });
+                cy.wait(800)
                 cy.get(".todo-item")
                     .its("length")
                     .should("eq", len - 1);
