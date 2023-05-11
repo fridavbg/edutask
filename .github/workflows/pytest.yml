@@ -1,9 +1,15 @@
 name: Pytest
 
 on:
-  pull_request: 
-    branches: ['master']
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
   workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ./backend
 
 jobs:
   test: 
@@ -17,14 +23,13 @@ jobs:
         with: 
           python-version: '3.10'
           cache: 'pip'
+          
       - name: Install dependencies
         run: |
-          cd backend/
           python -m pip install --upgrade pip
-          pip install -r requirements.pip
+          pip install -r requirements.txt
         
       - name: Unit Tests
         run: |
-          cd backend/
           python -m pytest -m unit
       
