@@ -1,6 +1,6 @@
 name: Pytest
 
-on: 
+on:
   pull request: 
     branches: ['main']
   workflow dispatch:
@@ -8,14 +8,14 @@ on:
 jobs:
   test: 
     runs on: ubuntu-latest
-
+    
     steps: 
       - uses: actions/checkout@v3
       - name: Set up Python 3.10
       - uses: actions/setup-python@4
-      with: 
-        python-version: '3.10'
-        cache: 'pip'
+        with: 
+          python-version: '3.10'
+          cache: 'pip'
       - name: Install dependencies
       - run: 
         cd backend/
@@ -23,5 +23,6 @@ jobs:
         pip install -r requirements.pip
       
       - name: Unit Tests
-        run: python -m pytest -m unit
+        run: |
+          python -m pytest -m unit
       
