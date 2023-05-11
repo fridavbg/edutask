@@ -3,7 +3,7 @@ name: Pytest
 on:
   pull_request: 
     branches: ['master']
-  workflow dispatch:
+  workflow_dispatch:
 
 jobs:
   test: 
