@@ -40,6 +40,8 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
         cy.get(".todo-item")
             .its("length")
             .then((len) => {
+                // New fix: Checks that Add button is disabled when description is empty
+                cy.get('input[value="Add"]').should("be.disabled");
                 cy.get('input[placeholder="Add a new todo item"]').type(todo, {
                     force: true,
                 });
