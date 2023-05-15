@@ -2,7 +2,7 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
     let email, userId;
     let todo = "new todo";
 
-    before("create a dummy user", () => {
+    before("create a dummy user and tasks", () => {
         cy.fixture("user.json").then((user) => {
             cy.request({
                 method: "POST",
@@ -12,18 +12,16 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
             }).then((response) => {
                 userId = response.body._id.$oid;
                 email = user.email;
-            });
-        });
-    });
-
-    before("create dummy tasks", () => {
-        cy.fixture("tasks.json").then((task) => {
-            task.userid = userId;
-            cy.request({
-                method: "POST",
-                url: "http://localhost:5000/tasks/create",
-                form: true,
-                body: task,
+                // The task-creation request to the backend is placed within a .then() response of the user-creation request to the backend
+                cy.fixture("tasks.json").then((task) => {
+                    task.userid = userId;
+                    cy.request({
+                        method: "POST",
+                        url: "http://localhost:5000/tasks/create",
+                        form: true,
+                        body: task,
+                    });
+                });
             });
         });
     });
@@ -78,7 +76,7 @@ describe("Test cases for requirement 8 of the EduTask specification", () => {
             .click()
             .then(() => {
                 cy.get("ul")
-                    .find(".todo-item:first")   
+                    .find(".todo-item:first")
                     .find(".checker")
                     .click({ force: true });
                 cy.get(".todo-item:first .editable")
