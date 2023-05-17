@@ -9,6 +9,10 @@ user_object = {'id': "1", 'firstName': 'John',
 create_user = {'firstName': 'John',
                'lastName': 'Doe', 'email': 'test@test.com'}
 
+
+update_user = {'firstName': 'Jane',
+               'lastName': 'Doe', 'email': 'jane@test.com'}
+
 # ------------------------------------------------------------------------------------------------------
 
 # *TEST CREATE METHOD*
@@ -102,3 +106,145 @@ def test_get(sut, id, expected):
 def test_get_exception(sut_exception, id):
     with pytest.raises(Exception):
         sut_exception.get(id=id)
+
+
+# ------------------------------------------------------------------------------------------------------
+
+# *TEST GET_ALL METHOD*
+
+# Setup for tests
+
+
+@pytest.fixture
+def sut_get_all():
+    mocked_dao = mock.MagicMock()
+    mockedsut = Controller(dao=mocked_dao)
+    return mockedsut, mocked_dao
+
+
+@pytest.fixture
+def sut_get_all_exception():
+    mocked_dao = mock.MagicMock()
+    mocked_dao.find.side_effect = Exception
+    mockedsut = Controller(dao=mocked_dao)
+    return mockedsut
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize('expected_result', [
+    ([{'_id': '1'}, {'_id': '2'}]),
+    ([]),
+])
+def test_get_all(expected_result, sut_get_all):
+    sut, mocked_dao = sut_get_all
+    mocked_dao.find.return_value = expected_result
+    res = sut.get_all()
+    assert res == expected_result
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize('expected_exception', [
+    (Exception),
+])
+def test_get_all_exception(expected_exception, sut_get_all_exception):
+    with pytest.raises(expected_exception):
+        sut_get_all_exception.get_all()
+
+
+# ------------------------------------------------------------------------------------------------------
+
+# *TEST UPDATE METHOD*
+
+# Setup for test
+
+
+@pytest.fixture
+def sut_update(id: str, data: dict, boolean):
+    mockeduser = mock.MagicMock()
+    mockeduser.update.return_value = boolean
+    mockedsut = Controller(dao=mockeduser)
+    return mockedsut
+
+
+@pytest.fixture
+def sut_update_exception(data: dict):
+    mockeduser = mock.MagicMock()
+    mockeduser.update.side_effect = Exception
+    mockedsut = Controller(dao=mockeduser)
+    return mockedsut
+
+
+# test #1 expected = return True if update was successful
+# test #2 expected = return False if update failed
+@pytest.mark.unit
+@pytest.mark.parametrize('id, data, boolean',
+                         [
+                             ("1", update_user, True),
+                             ("1", update_user, False),
+                         ]
+                         )
+def test_update(sut_update, id, data, boolean):
+    res = sut_update.update(id=id, data=data)
+    assert res == boolean
+
+
+# test #3 update method, database operation fails
+# Exception expected
+@pytest.mark.unit
+@pytest.mark.parametrize('id, data',
+                         [
+                             ("1", update_user),
+                         ]
+                         )
+def test_update_exception(sut_update_exception, id, data):
+    with pytest.raises(Exception):
+        sut_update_exception.update(id=id, data=data)
+
+# ------------------------------------------------------------------------------------------------------
+
+# *TEST DELETE METHOD*
+
+# Setup for test
+
+
+@pytest.fixture
+def sut_delete(id: str, boolean):
+    mockeduser = mock.MagicMock()
+    mockeduser.delete.return_value = boolean
+    mockedsut = Controller(dao=mockeduser)
+    return mockedsut
+
+
+@pytest.fixture
+def sut_delete_exception(id: str):
+    mockeduser = mock.MagicMock()
+    mockeduser.delete.side_effect = Exception
+    mockedsut = Controller(dao=mockeduser)
+    return mockedsut
+
+
+# test #1 expected = return True if delete was successful
+# test #2 expected = return False if delete failed
+@pytest.mark.unit
+@pytest.mark.parametrize('id, boolean',
+                         [
+                             ("1", True),
+                             ("1", False),
+                         ]
+                         )
+def test_delete(sut_delete, id, boolean):
+    res = sut_delete.delete(id=id)
+    assert res == boolean
+
+
+# test #3 delete method, database operation fails
+# Exception expected
+@pytest.mark.unit
+@pytest.mark.parametrize('id',
+                         [
+                             ("1"),
+                         ]
+                         )
+def test_delete_exception(sut_delete_exception, id):
+    with pytest.raises(Exception):
+        sut_delete_exception.delete(id=id)
